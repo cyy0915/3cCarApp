@@ -3,6 +3,8 @@
 *English | [中文](README.zh.md)*
 
 This tutorial enables you to quickly get started in your development efforts to create an Android app with real-time video calls, voice calls, and interactive broadcasting.
+This tutorial enables you to quickly get started in your development efforts to create an Android app with real-time video calls, voice calls, and interactive broadcasting.
+
 
 With this sample app, you can:
 - Join and leave a channel.
