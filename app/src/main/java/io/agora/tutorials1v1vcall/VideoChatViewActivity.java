@@ -37,6 +37,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
     };
 
     //private RtcEngine mRtcEngine;
+    //private boolean mCallEnd;
     private RtcEngine mRtcEngine;
     private boolean mCallEnd;
     private boolean mMuted;
