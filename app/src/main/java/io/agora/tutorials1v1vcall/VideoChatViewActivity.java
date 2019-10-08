@@ -36,6 +36,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    //private RtcEngine mRtcEngine;
     private RtcEngine mRtcEngine;
     private boolean mCallEnd;
     private boolean mMuted;
