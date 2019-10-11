@@ -41,13 +41,10 @@ public class VideoChatViewActivity extends AppCompatActivity {
     private RtcEngine mRtcEngine;
     private boolean mCallEnd;
 
-    private FrameLayout mLocalContainer;
-    private RelativeLayout mRemoteContainer;
+    private RelativeLayout mLocalContainer;
     private SurfaceView mLocalView;
-    private SurfaceView mRemoteView;
 
     private ImageView mCallBtn;
-    private ImageView mMuteBtn;
     private ImageView mSwitchCameraBtn;
 
     // Customized logger view
@@ -59,72 +56,13 @@ public class VideoChatViewActivity extends AppCompatActivity {
      * engine deals with the events in a separate thread.
      */
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-        @Override
-        public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mLogView.logI("Join channel success, uid: " + (uid & 0xFFFFFFFFL));
-                }
-            });
-        }
 
-        @Override
-        public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mLogView.logI("First remote video decoded, uid: " + (uid & 0xFFFFFFFFL));
-                    setupRemoteVideo(uid);
-                }
-            });
-        }
-
-        @Override
-        public void onUserOffline(final int uid, int reason) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mLogView.logI("User offline, uid: " + (uid & 0xFFFFFFFFL));
-                    onRemoteUserLeft();
-                }
-            });
-        }
     };
 
-    private void setupRemoteVideo(int uid) {
-        // Only one remote video view is available for this
-        // tutorial. Here we check if there exists a surface
-        // view tagged as this uid.
-        int count = mRemoteContainer.getChildCount();
-        View view = null;
-        for (int i = 0; i < count; i++) {
-            View v = mRemoteContainer.getChildAt(i);
-            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid) {
-                view = v;
-            }
-        }
 
-        if (view != null) {
-            return;
-        }
 
-        mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
-        mRemoteContainer.addView(mRemoteView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-        mRemoteView.setTag(uid);
-    }
 
-    private void onRemoteUserLeft() {
-        removeRemoteVideo();
-    }
 
-    private void removeRemoteVideo() {
-        if (mRemoteView != null) {
-            mRemoteContainer.removeView(mRemoteView);
-        }
-        mRemoteView = null;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +81,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mLocalContainer = findViewById(R.id.local_video_view_container);
-        mRemoteContainer = findViewById(R.id.remote_video_view_container);
+        mLocalContainer = findViewById(R.id.remote_video_view_container);
 
         mCallBtn = findViewById(R.id.btn_call);
         mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
@@ -300,7 +237,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
     private void endCall() {
         removeLocalVideo();
-        removeRemoteVideo();
         leaveChannel();
     }
 
@@ -313,7 +249,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
 
     private void showButtons(boolean show) {
         int visibility = show ? View.VISIBLE : View.GONE;
-        mMuteBtn.setVisibility(visibility);
         mSwitchCameraBtn.setVisibility(visibility);
     }
 }
