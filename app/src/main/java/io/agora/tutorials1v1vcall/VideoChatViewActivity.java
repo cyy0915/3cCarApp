@@ -40,7 +40,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
     //private boolean mCallEnd;
     private RtcEngine mRtcEngine;
     private boolean mCallEnd;
-    private boolean mMuted;
 
     private FrameLayout mLocalContainer;
     private RelativeLayout mRemoteContainer;
@@ -148,13 +147,12 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRemoteContainer = findViewById(R.id.remote_video_view_container);
 
         mCallBtn = findViewById(R.id.btn_call);
-        mMuteBtn = findViewById(R.id.btn_mute);
         mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
 
         mLogView = findViewById(R.id.log_recycler_view);
 
         // Sample logs are optional.
-        showSampleLogs();
+        //showSampleLogs();
     }
 
     private void showSampleLogs() {
@@ -209,6 +207,8 @@ public class VideoChatViewActivity extends AppCompatActivity {
         setupVideoConfig();
         setupLocalVideo();
         joinChannel();
+        mRtcEngine.muteLocalAudioStream(true);
+        mRtcEngine.switchCamera();
     }
 
     private void initializeEngine() {
@@ -274,12 +274,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRtcEngine.leaveChannel();
     }
 
-    public void onLocalAudioMuteClicked(View view) {
-        mMuted = !mMuted;
-        mRtcEngine.muteLocalAudioStream(mMuted);
-        int res = mMuted ? R.drawable.btn_mute : R.drawable.btn_unmute;
-        mMuteBtn.setImageResource(res);
-    }
 
     public void onSwitchCameraClicked(View view) {
         mRtcEngine.switchCamera();
@@ -289,11 +283,11 @@ public class VideoChatViewActivity extends AppCompatActivity {
         if (mCallEnd) {
             startCall();
             mCallEnd = false;
-            mCallBtn.setImageResource(R.drawable.btn_endcall);
+            mCallBtn.setImageResource(android.R.drawable.presence_offline);
         } else {
             endCall();
             mCallEnd = true;
-            mCallBtn.setImageResource(R.drawable.btn_startcall);
+            mCallBtn.setImageResource(android.R.drawable.presence_online);
         }
 
         showButtons(!mCallEnd);
