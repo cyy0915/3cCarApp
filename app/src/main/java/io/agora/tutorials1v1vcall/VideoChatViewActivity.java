@@ -166,7 +166,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
         // Please go to this page for detailed explanation
         // https://docs.agora.io/en/Video/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_rtc_engine.html#af5f4de754e2c1f493096641c5c5c1d8f
         mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
-                VideoEncoderConfiguration.VD_640x360,
+                VideoEncoderConfiguration.VD_1280x720,
                 VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
                 VideoEncoderConfiguration.STANDARD_BITRATE,
                 VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
