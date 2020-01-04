@@ -49,6 +49,8 @@ public class VideoChatViewActivity extends AppCompatActivity {
     //private boolean mCallEnd;
     private RtcEngine mRtcEngine;
     private boolean mCallEnd;
+    private boolean mSmallState = true;
+    private boolean mRemoteOn = false;
 
     private RelativeLayout mRemoteContainer;
     private SurfaceView mRemoteView;
@@ -65,15 +67,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
      * engine deals with the events in a separate thread.
      */
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-        @Override
-        public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                   // mLogView.logI("Join channel success, uid: " + (uid & 0xFFFFFFFFL));
-                }
-            });
-        }
 
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
@@ -90,12 +83,10 @@ public class VideoChatViewActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                 //   mLogView.logI("User offline, uid: " + (uid & 0xFFFFFFFFL));
                     onRemoteUserLeft();
                 }
             });
         }
-
     };
 
 
@@ -151,7 +142,6 @@ public class VideoChatViewActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
             return false;
         }
-
         return true;
     }
 
@@ -235,6 +225,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
         if (view != null) {
             return;
         }*/
+        mRemoteOn = true;
 
         mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
         mRemoteContainer.addView(mRemoteView);
@@ -300,7 +291,8 @@ public class VideoChatViewActivity extends AppCompatActivity {
         showButtons(!mCallEnd);
     }
 
-    public void onSmallClicked(View view){
+public void onSmallClicked(View view){
+    if (mSmallState) {
         mFloatWindow = DraggableFloatWindow.getDraggableFloatWindow(this, null);
         mFloatWindow.show();
         View temp = mFloatWindow.getView();
@@ -308,6 +300,15 @@ public class VideoChatViewActivity extends AppCompatActivity {
         mRemoteContainer = temp.findViewById(R.id.Remote);
         setupRemoteVideo(lastUid);
     }
+    else
+    {
+        removeRemoteVideo();
+        mFloatWindow.dismiss();
+        mRemoteContainer = findViewById(R.id.remote_video_view_container);
+        setupRemoteVideo(lastUid);
+    }
+   mSmallState = !mSmallState;
+}
 
     private void startCall() {
         //setupLocalVideo();
@@ -334,6 +335,7 @@ public class VideoChatViewActivity extends AppCompatActivity {
             mRemoteContainer.removeView(mRemoteView);
         }
         mRemoteView = null;
+        mRemoteOn = false;
     }
 
 
